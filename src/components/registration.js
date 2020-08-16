@@ -45,8 +45,9 @@ const Registration = () => {
         initState();
     }
 
-    const deleteTodoList = () =>{
-        setTodoList(todoList.splice(1));
+    const deleteTodoList = (i) =>{
+        console.log('test');
+        setTodoList(todoList.splice(i, 1));
     }
 
     if(title === ''){
@@ -114,9 +115,6 @@ const Registration = () => {
     }
     return(
         <div className="registration">
-            <TodoList 
-                todoList={todoList}
-            />
             <h2>Registration</h2>
             {form}
         </div>

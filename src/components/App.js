@@ -1,13 +1,13 @@
 import React from 'react';
 import Header from './header';
-import Registration from './registration';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import TodoList from './todo-list';
 
 const App = () =>{
   return (
     <div>
       <Header />
-      <Registration />
+      <TodoList />
     </div>
   );
 }
