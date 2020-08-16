@@ -12,6 +12,10 @@ const Registration = () => {
                                                 content: ''
                                             }]);
 
+    let form;
+    let titleErrorText;
+    let contentErrorText;
+
     const initState = () =>{
         setTitle('');
         setContent('');
@@ -45,7 +49,18 @@ const Registration = () => {
         setTodoList(todoList.splice(1));
     }
 
-    let form;
+    if(title === ''){
+        titleErrorText = "title doesn't exist";
+    }else{
+        titleErrorText = "title exists";
+    }
+
+    if(content === ''){
+        contentErrorText = "content doesn't exist";
+    }else{
+        contentErrorText = "content exists";
+    }
+
     if(isSubmitted){
         form = (
             <h4>Sent Successfully</h4>
@@ -64,10 +79,10 @@ const Registration = () => {
                             value={title} 
                             placeholder="title"
                             onChange={(event)=>{
-                                handleTitle(event)
+                                handleTitle(event);
                             }} />
                         <Form.Text>
-                            test
+                            {titleErrorText}
                         </Form.Text>
                     </Form.Group>
                     <Form.Group controlId="formContentId">
@@ -81,11 +96,17 @@ const Registration = () => {
                             placeholder="content"
                             value={content}
                             onChange={(event)=>{
-                                handleContent(event)
+                                handleContent(event);
                             }}
                         />
+                        <Form.Text>
+                            {contentErrorText}
+                        </Form.Text>
                     </Form.Group>
-                    <Button type="submit">Registration</Button>
+                    <Button 
+                        type="submit"
+                        disabled={title === '' || content === ''}
+                    >Registration</Button>
                 </Form>
                 <Button onClick={deleteTodoList}>Delete</Button>
             </div>
