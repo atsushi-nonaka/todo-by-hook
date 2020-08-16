@@ -6,6 +6,8 @@ import { Table } from 'react-bootstrap';
 const TodoList = (props) =>{
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const [titleLength, setTitleLength] = useState(0);
+    const [contentLength, setContentLength] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [todoList, setTodoList] = useState([{
                                                 title: '',
@@ -23,12 +25,16 @@ const TodoList = (props) =>{
 
     const handleTitle = (event) =>{
         const title = event.target.value;
+        const titleLength = title.replace(/[\n\s　]/g, "").length;
         setTitle(title);
+        setTitleLength(titleLength);
     }
 
     const handleContent = (event) =>{
         const content = event.target.value;
+        const contentLength = content.replace(/[\n\s　]/g, "").length;
         setContent(content);
+        setContentLength(contentLength);
     }
 
     const submitted = () =>{
@@ -45,19 +51,19 @@ const TodoList = (props) =>{
         initState();
     }
 
-    const deleteButton = (index) =>{
+    const handleDelete = (index) =>{
         const newTodoList = [...todoList];
         newTodoList.splice(index + 1, 1)
         setTodoList(newTodoList);
     }
 
-    if(title === ''){
+    if(titleLength === 0){
         titleErrorText = "title doesn't exist";
     }else{
         titleErrorText = "title exists";
     }
 
-    if(content === ''){
+    if(contentLength === 0){
         contentErrorText = "content doesn't exist";
     }else{
         contentErrorText = "content exists";
@@ -83,7 +89,7 @@ const TodoList = (props) =>{
                             onChange={(event)=>{
                                 handleTitle(event);
                             }} />
-                        <Form.Text>
+                        <Form.Text className={titleLength === 0 ? 'error-text': 'success-text'}>
                             {titleErrorText}
                         </Form.Text>
                     </Form.Group>
@@ -101,7 +107,7 @@ const TodoList = (props) =>{
                                 handleContent(event);
                             }}
                         />
-                        <Form.Text>
+                        <Form.Text className={contentLength === 0 ? 'error-text': 'success-text'}>
                             {contentErrorText}
                         </Form.Text>
                     </Form.Group>
@@ -133,7 +139,7 @@ const TodoList = (props) =>{
                                 <td><Button 
                                     variant="danger"
                                     onClick={() =>{
-                                        deleteButton(index)
+                                        handleDelete(index)
                                     }}
                                 >Delete</Button></td>
                             </tr>

@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from './header';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import TodoList from './todo-list';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () =>{
   return (
