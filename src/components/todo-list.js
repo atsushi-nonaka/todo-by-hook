@@ -6,21 +6,26 @@ import { Table } from 'react-bootstrap';
 const TodoList = (props) =>{
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const [deadline, setDeadline] = useState('');
     const [titleLength, setTitleLength] = useState(0);
     const [contentLength, setContentLength] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [todoList, setTodoList] = useState([{
                                                 title: '',
-                                                content: ''
+                                                content: '',
+                                                deadline: '',
                                             }]);
 
     let form;
     let titleErrorText;
     let contentErrorText;
+    let deadlineErrorText;
 
     const initState = () =>{
         setTitle('');
         setContent('');
+        setTitleLength(0);
+        setContentLength(0);
     }
 
     const handleTitle = (event) =>{
@@ -37,17 +42,23 @@ const TodoList = (props) =>{
         setContentLength(contentLength);
     }
 
+    const handleDeadline = (event) => {
+        const deadline = event.target.value;
+        setDeadline(deadline);
+    }
+
     const submitted = () =>{
         let todoItem = {
             title: title,
-            content: content
+            content: content,
+            deadline: deadline
         }
 
         setTodoList(todoList.concat(todoItem));
         setIsSubmitted(!isSubmitted);
         setTimeout(() => {
             setIsSubmitted(false)
-        }, 2000);
+        }, 1000);
         initState();
     }
 
@@ -56,6 +67,11 @@ const TodoList = (props) =>{
         newTodoList.splice(index + 1, 1)
         setTodoList(newTodoList);
     }
+
+    const nowDate = () =>{
+        const nowDate = new Date();
+        return nowDate;
+    } 
 
     if(titleLength === 0){
         titleErrorText = "title doesn't exist";
@@ -67,6 +83,24 @@ const TodoList = (props) =>{
         contentErrorText = "content doesn't exist";
     }else{
         contentErrorText = "content exists";
+    }
+
+    if(deadline === '' || (Number(deadline.substring(0,4)) < nowDate().getFullYear())){
+        deadlineErrorText = "wrong";
+    }else{
+        if(Number(deadline.substring(0,4)) > nowDate().getFullYear()){
+            deadlineErrorText = "correct"; 
+        }else if(Number(deadline.substring(0,4)) === nowDate().getFullYear() && (Number(deadline.substring(5,7)) === nowDate().getMonth() + 1)){
+            if(Number(deadline.substring(8,10)) >= nowDate().getDate()){
+                deadlineErrorText = "correct";
+            }else{
+                deadlineErrorText = "wrong";
+            }
+        }else if(Number(deadline.substring(0,4)) === nowDate().getFullYear() && (Number(deadline.substring(5,7)) > nowDate().getMonth() + 1)){
+            deadlineErrorText = "correct";
+        }else{
+            deadlineErrorText = "wrong"; 
+        }
     }
 
     if(isSubmitted){
@@ -111,9 +145,23 @@ const TodoList = (props) =>{
                             {contentErrorText}
                         </Form.Text>
                     </Form.Group>
+                    <Form.Group controlId="formTitleId">
+                        <Form.Label><h5>Date<small className="ml-2">(deadline)</small></h5></Form.Label>
+                        <Form.Control 
+                            className="w-50" 
+                            type="date" 
+                            name="deadline"
+                            value={deadline}
+                            onChange={(event)=>{
+                                handleDeadline(event);
+                            }} />
+                        <Form.Text className={deadlineErrorText === "wrong" ? 'error-text': 'success-text'}>
+                            {deadlineErrorText}
+                        </Form.Text>
+                    </Form.Group>
                     <Button 
                         type="submit"
-                        disabled={title === '' || content === ''}
+                        disabled={title === '' || content === '' || deadlineErrorText === "wrong"}
                     >Registration</Button>
                 </Form>
             </div>
@@ -127,6 +175,7 @@ const TodoList = (props) =>{
                     <tr>
                         <th>title</th>
                         <th>content</th>
+                        <th>deadline</th>
                         <th>delete</th>
                     </tr>
                 </thead>
@@ -136,6 +185,7 @@ const TodoList = (props) =>{
                             <tr key={index}>
                                 <td>{todo.title}</td>
                                 <td>{todo.content}</td>
+                                <td>{todo.deadline}</td>
                                 <td><Button 
                                     variant="danger"
                                     onClick={() =>{
